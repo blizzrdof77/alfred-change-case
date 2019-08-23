@@ -26,6 +26,25 @@ def titlecase_plus(text):
     return m.group().upper()
   return always_uppercase_re.sub(upcase, text)
 
+def do_transform_variation(variation, text):
+  variations = {
+    'lower': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ),
+    'upper': escape(text.upper(), {'"': '&quot;', '\n': '&#10;'} ),
+    'title': escape(titlecase_plus(text), {'"': '&quot;', '\n': '&#10;'} ),
+    'camel': escape(titlecase_plus(text), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', ''),
+    'kebab': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', '-').replace('_', '-'),
+    'snake': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', '_').replace('-', '_')
+  }
+  return variations[variation]
+
+def clean_special_char_str(text):
+  if ' ' in text:
+    return text
+  else:
+    return text.replace('-', ' ').replace('_', ' ')
+
+text = clean_special_char_str(text)
+
 variations = {
   'lower': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ),
   'upper': escape(text.upper(), {'"': '&quot;', '\n': '&#10;'} ),
@@ -33,7 +52,6 @@ variations = {
   'camel': escape(titlecase_plus(text), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', ''),
   'kebab': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', '-').replace('_', '-'),
   'snake': escape(text.lower(), {'"': '&quot;', '\n': '&#10;'} ).replace(' ', '_').replace('-', '_')
-
 }
 
 print """<?xml version="1.0"?>
